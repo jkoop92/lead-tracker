@@ -1,0 +1,8 @@
+# One search per line. Lines starting with # are ignored.
+# Mix categories and cities to cover more ground per run.
+roofers in Boise, ID
+electricians in Boise, ID
+landscapers in Boise, ID
+HVAC contractors in Meridian, ID
+auto repair shops in Nampa, ID
+dentists in Boise, ID
