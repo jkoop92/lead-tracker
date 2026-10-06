@@ -83,7 +83,54 @@ python3 leadfinder.py --queries-file queries.txt --output leads.csv --append
 
 `leads.csv` has one row per business with no website listed:
 
-`business_name, address, phone, rating, review_count, types, google_maps_url, place_id, matched_query`
+`business_name, address, phone, rating, review_count, types, google_maps_url, place_id, matched_query, status`
+
+`status` starts as `New` and is meant to be updated by hand (open the CSV in
+Numbers/Excel) as you work a lead: `Called`, `Texted`, `Replied`, `Closed`,
+`Not Interested`, etc. The outreach tools below read and update this column.
+
+## 4. Work the leads
+
+### One-time setup
+
+Copy the info template and fill in your name/phone/portfolio — this
+personalizes every script and text the tools generate:
+
+```bash
+cp my_info.example.txt my_info.txt
+open my_info.txt
+```
+
+`my_info.txt` is gitignored, so your personal info never gets committed.
+
+### Build a prioritized call sheet
+
+```bash
+python3 worklist.py --leads leads.csv --output worklist.txt
+open worklist.txt
+```
+
+This sorts your leads by review count (most-reviewed first — more
+established businesses are more likely to have budget), skips anything
+already marked `Closed` or `Not Interested`, and writes out a personalized
+call script and text script for every lead, ready to read straight off the
+screen while you work through the list. After each call, update that lead's
+`status` in `leads.csv` and re-run `worklist.py` to keep the sheet current.
+
+### Send the texts (optional, macOS only)
+
+```bash
+python3 send_texts.py --dry-run       # preview first, sends nothing
+python3 send_texts.py --limit 10      # actually sends, capped at 10
+```
+
+This sends the personalized text script to every lead with status `New`
+and a phone number, through your Mac's own Messages app (your real number,
+not a bulk SMS service), a few seconds apart, and marks each one `Texted`
+in `leads.csv` as it goes so re-running never double-sends. It asks for a
+`yes` confirmation before sending anything for real.
+
+Always run `--dry-run` first to read over what's about to go out.
 
 ## Notes / caveats
 
@@ -93,7 +140,12 @@ python3 leadfinder.py --queries-file queries.txt --output leads.csv --append
   presence (some only list a Facebook/Instagram page), so it's worth a
   quick glance at the Maps link before reaching out, not a hard filter.
 - Respect do-not-call/anti-spam rules in your area when using this list for
-  outreach (e.g. don't robo-text; check local regulations for cold calling
-  businesses).
+  outreach. `send_texts.py` is deliberately rate-limited (a handful at a
+  time, seconds apart, through your own phone number) and includes a
+  "Reply STOP to opt out" line — honor any opt-out immediately by marking
+  that lead `Not Interested` and never texting it again. Sending a lot of
+  unsolicited texts quickly, or ignoring opt-outs, risks running afoul of
+  TCPA rules and getting your number flagged as spam by carriers. When in
+  doubt, prefer the phone call over the text.
 - Re-running the same query will return the same businesses — use
   `--append` for periodic prospecting runs so you only see new leads.

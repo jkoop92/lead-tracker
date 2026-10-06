@@ -46,6 +46,7 @@ CSV_COLUMNS = [
     "google_maps_url",
     "place_id",
     "matched_query",
+    "status",
 ]
 
 
@@ -121,6 +122,7 @@ def to_row(place, query):
         "google_maps_url": place.get("googleMapsUri", ""),
         "place_id": place.get("id", ""),
         "matched_query": query,
+        "status": "New",
     }
 
 

@@ -1,0 +1,5 @@
+# Fill this in and save as my_info.txt (not my_info.example.txt) in the same folder.
+# Used to personalize your call/text scripts and outgoing messages.
+name = Your Name
+phone = (555) 123-4567
+portfolio = https://yourportfolio.com

@@ -3,3 +3,5 @@ __pycache__/
 .env
 leads.csv
 *.csv
+my_info.txt
+worklist.txt
